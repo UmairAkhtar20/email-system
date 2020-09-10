@@ -1,11 +1,6 @@
 <?php session_start(); ?>
 <?php include("connec.php"); ?>
 <?php $username=$_SESSION['name']; ?>
-<?php   
-   $sql="SELECT * FROM sending_msg where sent_to ='$username'";
-   $result=mysqli_query($conn,$sql);
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,7 +21,17 @@ html,body,h1,h2,h3,h4,h5 {font-family: "RobotoDraft", "Roboto", sans-serif}
         $(document).ready(function(){
           $("#sendmsg").on('click',function(){
             sendmsg();
-          });
+            });
+
+            $(".w3-button").on('click',function(){
+              inbox();
+            });
+            $(".send").on('click',function () {
+              sent();
+            });
+            $(".option").on('click',function (){
+              option();
+            }); 
         });
 
 
@@ -36,46 +41,18 @@ html,body,h1,h2,h3,h4,h5 {font-family: "RobotoDraft", "Roboto", sans-serif}
 
 <!-- Side Navigation -->
 <nav class="w3-sidebar w3-bar-block w3-collapse w3-white w3-animate-left w3-card" style="z-index:3;width:320px;" id="mySidebar">
-  <a href="javascript:void(0)" style="background-color:red;"class="w3-bar-item w3-button w3-border-bottom w3-large"><span style="width:60%;"> <b>Welcome:<?php echo $username ?></b> </span></a>
+  <a href="javascript:void(0)" style="background-color:red;"class="w3-bar-item w3-button w3-border-bottom w3-large"><span style="width:60%;"> <b class="boldname">Welcome:<?php echo $username ?></b> </span></a>
   <a href="javascript:void(0)" onclick="w3_close()" title="Close Sidemenu" 
   class="w3-bar-item w3-button w3-hide-large w3-large">Close <i class="fa fa-remove"></i></a>
-  <a href="javascript:void(0)" class="w3-bar-item w3-button w3-dark-grey w3-button w3-hover-black w3-left-align" onclick="document.getElementById('id01').style.display='block'">New Message <i class="w3-padding fa fa-pencil"></i></a>
+  <a href="javascript:void(0)" class="w3-bar-item w3-button w3-dark-grey w3-button w3-hover-black w3-left-align option" onclick="document.getElementById('id01').style.display='block'">New Message <i class="w3-padding fa fa-pencil"></i></a>
   <a id="myBtn" onclick="myFunc('Demo1')" href="javascript:void(0)" class="w3-bar-item w3-button"><i class="fa fa-inbox w3-margin-right"></i>Inbox<i class="fa fa-caret-down w3-margin-left"></i></a>
-  <div id="Demo1" class="w3-hide w3-animate-left">
-  <?php 
-  while($row=mysqli_fetch_assoc($result))
-  { ?>
-    <a href="javascript:void(0)" class="w3-bar-item w3-button w3-border-bottom test w3-hover-light-grey" onclick="openMail('<?php echo $row['send_by_user']?>');w3_close();" id="firstTab">
-      <div class="w3-container">
-        <img class="w3-round w3-margin-right" src="avatar.png" style="width:15%;"><span class="w3-opacity w3-large"><?php echo $row['send_by_user']?></span>
-        <h6>Subject:  <?php echo $row['subject'] ?></h6>
-        <p> MSG:<?php echo $row['msg']?>.</p>
-      </div>
-    </a>
-  <?php }
-  ?>
-  </div>
-  <a href="javascript:void(0)" id="myBtn2" onclick="myFunc('Demo2')" class="w3-bar-item w3-button w3-dark-grey w3-button w3-hover-black w3-left-align"><i class="fa fa-paper-plane w3-margin-right"></i>Sent<i class="fa fa-caret-down w3-margin-left"></i></a>
-  <div id="Demo2"class="w3-hide w3-animate-left" >
-        <?php
-        $userid=$_SESSION['adminid'];
-        $sql="SELECT * From sending_msg where send_by_userid ='$userid'";
-        $result=mysqli_query($conn,$sql);
-        while($row=mysqli_fetch_assoc($result))
-        { 
-        ?>
-          <div class="w3-container">
-        <img class="w3-round w3-margin-right" src="avatar.png" style="width:15%;"><span class="w3-opacity w3-large">SENT to:<?php echo $row['sent_to']?></span>
-        
-        <br><span>SENT ON : <?php echo $row['sent_on']?></span>
-        <h6>Subject:<?php echo $row['subject'] ?></h6>
-        <p> MSG:<?php echo $row['msg']?>.</p>
-         </div>
+  <div id="Demo1" class="w3-hide w3-animate-left inbox">
 
-        <?php }
-        ?>
-  
   </div>
+  <a href="javascript:void(0)" id="myBtn2" onclick="myFunc('Demo2')" class="w3-bar-item w3-button send w3-dark-grey w3-button w3-hover-black w3-left-align"><i class="fa fa-paper-plane w3-margin-right"></i>Sent<i class="fa fa-caret-down w3-margin-left"></i></a>
+    <div id="Demo2"class="w3-hide w3-animate-left sent" > 
+
+    </div>
   <a href="#" class="w3-bar-item w3-button"><i class="fa fa-hourglass-end w3-margin-right"></i>Drafts</a>
   <a href="#" class="w3-bar-item w3-button"><i class="fa fa-trash w3-margin-right"></i>Trash</a>
 </nav>
@@ -90,15 +67,8 @@ html,body,h1,h2,h3,h4,h5 {font-family: "RobotoDraft", "Roboto", sans-serif}
     </div>
     <div class="w3-panel">
       <label>To</label>
-      <select name="sendto" id="sendto">
-        <?php
-           $sql="SELECT username FROM users";
-           $result=mysqli_query($conn,$sql);
-           while($row=mysqli_fetch_assoc($result)){
-             $name=$row['username'];
-             echo "<option>$name</option>";
-           }
-         ?>
+      <select class="sendto" id="sendto">
+       
       </select>
       <label>Subject</label>
       <input  id="subject"class="w3-input w3-border w3-margin-bottom" type="text">
@@ -118,12 +88,8 @@ html,body,h1,h2,h3,h4,h5 {font-family: "RobotoDraft", "Roboto", sans-serif}
 <div class="w3-main" style="margin-left:320px;">
 <i class="fa fa-bars w3-button w3-white w3-hide-large w3-xlarge w3-margin-left w3-margin-top" onclick="w3_open()"></i>
 <a href="javascript:void(0)" class="w3-hide-large w3-red w3-button w3-right w3-margin-top w3-margin-right" onclick="document.getElementById('id01').style.display='block'"><i class="fa fa-pencil"></i></a>
-<?php 
-while($row=mysqli_fetch_assoc($result))
-{
-  ?>
 
-}
+
 <div id="<?php echo $row['send_by_user']?>" class="w3-container person">
   <br>
   <img class="w3-round  w3-animate-top" src="avatar.png" style="width:20%;">
@@ -135,9 +101,7 @@ while($row=mysqli_fetch_assoc($result))
   <p><?php echo $row['msg']?>.</p>
   <p>Best Regards, <br><?php echo $row['send_by_user']?></p>
 </div>
-<?php
- }
-?>
+
      
 </div>
 
@@ -168,11 +132,7 @@ function myFunc(id) {
     x.previousElementSibling.className.replace(" w3-red", "");
   }
 }
-<?php
- while($row=mysqli_fetch_assoc($result))
-{?>
-openMail("<?php echo $row['send_by_user']?>");
-<?php } ?>
+openMail();
 function openMail(personName) {
   var i;
   var x = document.getElementsByClassName("person");
