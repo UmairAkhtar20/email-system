@@ -21,3 +21,24 @@ function Signin(){
     $.ajax(settings);
 
 }
+function sendmsg(){
+    var sendto=$("#sendto").val();
+    var subject=$("#subject").val();
+    var msg=$("#msg").val();
+    var data={"action":"sendmsg","sendto":sendto,"subject":subject,"msg":msg};
+    var settings={
+        Type:"post",
+        url:"api.php",
+        data:data,
+        dataType:"json",
+        success:function(r){
+            alert(r);
+        },
+        error:function(r){
+            alert(r);
+        }
+
+    };
+    $.ajax(settings);
+
+}
