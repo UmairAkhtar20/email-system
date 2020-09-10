@@ -42,27 +42,40 @@ html,body,h1,h2,h3,h4,h5 {font-family: "RobotoDraft", "Roboto", sans-serif}
   <a href="javascript:void(0)" class="w3-bar-item w3-button w3-dark-grey w3-button w3-hover-black w3-left-align" onclick="document.getElementById('id01').style.display='block'">New Message <i class="w3-padding fa fa-pencil"></i></a>
   <a id="myBtn" onclick="myFunc('Demo1')" href="javascript:void(0)" class="w3-bar-item w3-button"><i class="fa fa-inbox w3-margin-right"></i>Inbox<i class="fa fa-caret-down w3-margin-left"></i></a>
   <div id="Demo1" class="w3-hide w3-animate-left">
-    <a href="javascript:void(0)" class="w3-bar-item w3-button w3-border-bottom test w3-hover-light-grey" onclick="openMail('Borge');w3_close();" id="firstTab">
+  <?php 
+  while($row=mysqli_fetch_assoc($result))
+  { ?>
+    <a href="javascript:void(0)" class="w3-bar-item w3-button w3-border-bottom test w3-hover-light-grey" onclick="openMail('<?php echo $row['send_by_user']?>');w3_close();" id="firstTab">
       <div class="w3-container">
-        <img class="w3-round w3-margin-right" src="avatar.png" style="width:15%;"><span class="w3-opacity w3-large">Borge Refsnes</span>
-        <h6>Subject: Remember Me</h6>
-        <p>Hello, i just wanted to let you know that i'll be home at...</p>
+        <img class="w3-round w3-margin-right" src="avatar.png" style="width:15%;"><span class="w3-opacity w3-large"><?php echo $row['send_by_user']?></span>
+        <h6>Subject:  <?php echo $row['subject'] ?></h6>
+        <p> MSG:<?php echo $row['msg']?>.</p>
       </div>
     </a>
-     <a href="javascript:void(0)" class="w3-bar-item w3-button w3-border-bottom test w3-hover-light-grey" onclick="openMail('Jane');w3_close();">
-      <div class="w3-container">
-        <img class="w3-round w3-margin-right" src="avatar.png" style="width:15%;"><span class="w3-opacity w3-large">Jane Doe</span>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
-      </div>
-    </a>
-    <a href="javascript:void(0)" class="w3-bar-item w3-button w3-border-bottom test w3-hover-light-grey" onclick="openMail('John');w3_close();">
-      <div class="w3-container">
-        <img class="w3-round w3-margin-right" src="avatar.png" style="width:15%;"><span class="w3-opacity w3-large">John Doe</span>
-        <p>Welcome!</p>
-      </div>
-    </a>
+  <?php }
+  ?>
   </div>
-  <a href="#" class="w3-bar-item w3-button"><i class="fa fa-paper-plane w3-margin-right"></i>Sent</a>
+  <a href="javascript:void(0)" id="myBtn2" onclick="myFunc('Demo2')" class="w3-bar-item w3-button w3-dark-grey w3-button w3-hover-black w3-left-align"><i class="fa fa-paper-plane w3-margin-right"></i>Sent<i class="fa fa-caret-down w3-margin-left"></i></a>
+  <div id="Demo2"class="w3-hide w3-animate-left" >
+        <?php
+        $userid=$_SESSION['adminid'];
+        $sql="SELECT * From sending_msg where send_by_userid ='$userid'";
+        $result=mysqli_query($conn,$sql);
+        while($row=mysqli_fetch_assoc($result))
+        { 
+        ?>
+          <div class="w3-container">
+        <img class="w3-round w3-margin-right" src="avatar.png" style="width:15%;"><span class="w3-opacity w3-large">SENT to:<?php echo $row['sent_to']?></span>
+        
+        <br><span>SENT ON : <?php echo $row['sent_on']?></span>
+        <h6>Subject:<?php echo $row['subject'] ?></h6>
+        <p> MSG:<?php echo $row['msg']?>.</p>
+         </div>
+
+        <?php }
+        ?>
+  
+  </div>
   <a href="#" class="w3-bar-item w3-button"><i class="fa fa-hourglass-end w3-margin-right"></i>Drafts</a>
   <a href="#" class="w3-bar-item w3-button"><i class="fa fa-trash w3-margin-right"></i>Trash</a>
 </nav>
@@ -77,7 +90,16 @@ html,body,h1,h2,h3,h4,h5 {font-family: "RobotoDraft", "Roboto", sans-serif}
     </div>
     <div class="w3-panel">
       <label>To</label>
-      <input  id="sendto"class="w3-input w3-border w3-margin-bottom" type="text">
+      <select name="sendto" id="sendto">
+        <?php
+           $sql="SELECT username FROM users";
+           $result=mysqli_query($conn,$sql);
+           while($row=mysqli_fetch_assoc($result)){
+             $name=$row['username'];
+             echo "<option>$name</option>";
+           }
+         ?>
+      </select>
       <label>Subject</label>
       <input  id="subject"class="w3-input w3-border w3-margin-bottom" type="text">
       <input  id="msg"class="w3-input w3-border w3-margin-bottom" style="height:150px" placeholder="What's on your mind?">
@@ -96,50 +118,34 @@ html,body,h1,h2,h3,h4,h5 {font-family: "RobotoDraft", "Roboto", sans-serif}
 <div class="w3-main" style="margin-left:320px;">
 <i class="fa fa-bars w3-button w3-white w3-hide-large w3-xlarge w3-margin-left w3-margin-top" onclick="w3_open()"></i>
 <a href="javascript:void(0)" class="w3-hide-large w3-red w3-button w3-right w3-margin-top w3-margin-right" onclick="document.getElementById('id01').style.display='block'"><i class="fa fa-pencil"></i></a>
+<?php 
+while($row=mysqli_fetch_assoc($result))
+{
+  ?>
 
-
-<div id="Borge" class="w3-container person">
+}
+<div id="<?php echo $row['send_by_user']?>" class="w3-container person">
   <br>
   <img class="w3-round  w3-animate-top" src="avatar.png" style="width:20%;">
-  <h5 class="w3-opacity">Subject: Remember Me</h5>
-  <h4><i class="fa fa-clock-o"></i> From Borge Refsnes, Sep 27, 2015.</h4>
+  <h5 class="w3-opacity">Subject: <?php echo $row['subject'] ?></h5>
+  <h4><i class="fa fa-clock-o"></i> From <?php echo $row['send_by_user']?> ,ON <?php echo $row['sent_on']?></h4>
   <a class="w3-button w3-light-grey" href="#">Reply<i class="w3-margin-left fa fa-mail-reply"></i></a>
   <a class="w3-button w3-light-grey" href="#">Forward<i class="w3-margin-left fa fa-arrow-right"></i></a>
   <hr>
-  <p>Hello, i just wanted to let you know that i'll be home at lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-  <p>Best Regards, <br>Borge Refsnes</p>
+  <p><?php echo $row['msg']?>.</p>
+  <p>Best Regards, <br><?php echo $row['send_by_user']?></p>
 </div>
-
-<div id="Jane" class="w3-container person">
-  <br>
-  <img class="w3-round w3-animate-top" src="avatar.png" style="width:20%;">
-  <h5 class="w3-opacity">Subject: None</h5>
-  <h4><i class="fa fa-clock-o"></i> From Jane Doe, Sep 25, 2015.</h4>
-  <a class="w3-button w3-light-grey">Reply<i class="w3-margin-left fa fa-mail-reply"></i></a>
-  <a class="w3-button w3-light-grey">Forward<i class="w3-margin-left fa fa-arrow-right"></i></a>
-  <hr>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-  <p>Forever yours,<br>Jane</p>
-</div>
-
-<div id="John" class="w3-container person">
-  <br>
-  <img class="w3-round w3-animate-top" src="avatar.png" style="width:20%;">
-  <h5 class="w3-opacity">Subject: None</h5>
-  <h4><i class="fa fa-clock-o"></i> From John Doe, Sep 23, 2015.</h4>
-  <a class="w3-button w3-light-grey">Reply<i class="w3-margin-left fa fa-mail-reply"></i></a>
-  <a class="w3-button w3-light-grey">Forward<i class="w3-margin-left fa fa-arrow-right"></i></a>
-  <hr>
-  <p>Welcome.</p>
-  <p>That's it!</p>
-</div>
+<?php
+ }
+?>
      
 </div>
 
-<script>
+ <script>
 var openInbox = document.getElementById("myBtn");
 openInbox.click();
+var openInbox2 = document.getElementById("myBtn2");
+openInbox2.click();
 
 function w3_open() {
   document.getElementById("mySidebar").style.display = "block";
@@ -162,8 +168,11 @@ function myFunc(id) {
     x.previousElementSibling.className.replace(" w3-red", "");
   }
 }
-
-openMail("Borge")
+<?php
+ while($row=mysqli_fetch_assoc($result))
+{?>
+openMail("<?php echo $row['send_by_user']?>");
+<?php } ?>
 function openMail(personName) {
   var i;
   var x = document.getElementsByClassName("person");
@@ -182,7 +191,7 @@ function openMail(personName) {
 <script>
 var openTab = document.getElementById("firstTab");
 openTab.click();
-</script>
+</script> 
 
 </body>
 </html> 
