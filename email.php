@@ -25,12 +25,22 @@ html,body,h1,h2,h3,h4,h5 {font-family: "RobotoDraft", "Roboto", sans-serif}
 
             $(".w3-button").on('click',function(){
               inbox();
+              
             });
             $(".send").on('click',function () {
               sent();
             });
             $(".option").on('click',function (){
               option();
+            });
+            
+
+            $(".inbox").on('click','.one', function(){
+              var sendby=$(this).find(".spanname").attr("sendby");
+              var subject=$(this).find(".subject").attr("subject");
+              var sendon=$(this).find(".subject").attr("senton");
+              var msg=$(this).find(".msg").attr("msg");
+              inboxshow(sendby,subject,sendon,msg);
             }); 
         });
 
@@ -55,6 +65,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "RobotoDraft", "Roboto", sans-serif}
     </div>
   <a href="#" class="w3-bar-item w3-button"><i class="fa fa-hourglass-end w3-margin-right"></i>Drafts</a>
   <a href="#" class="w3-bar-item w3-button"><i class="fa fa-trash w3-margin-right"></i>Trash</a>
+  <a href="login.php" class="w3-bar-item w3-button" ><i class="fa fa-sign-out w3-margin-right"></i>Signout</a>
 </nav>
 
 <!-- Modal that pops up when you click on "New Message" -->
@@ -88,25 +99,11 @@ html,body,h1,h2,h3,h4,h5 {font-family: "RobotoDraft", "Roboto", sans-serif}
 <div class="w3-main" style="margin-left:320px;">
 <i class="fa fa-bars w3-button w3-white w3-hide-large w3-xlarge w3-margin-left w3-margin-top" onclick="w3_open()"></i>
 <a href="javascript:void(0)" class="w3-hide-large w3-red w3-button w3-right w3-margin-top w3-margin-right" onclick="document.getElementById('id01').style.display='block'"><i class="fa fa-pencil"></i></a>
-
-
-<div id="<?php echo $row['send_by_user']?>" class="w3-container person">
-  <br>
-  <img class="w3-round  w3-animate-top" src="avatar.png" style="width:20%;">
-  <h5 class="w3-opacity">Subject: <?php echo $row['subject'] ?></h5>
-  <h4><i class="fa fa-clock-o"></i> From <?php echo $row['send_by_user']?> ,ON <?php echo $row['sent_on']?></h4>
-  <a class="w3-button w3-light-grey" href="#">Reply<i class="w3-margin-left fa fa-mail-reply"></i></a>
-  <a class="w3-button w3-light-grey" href="#">Forward<i class="w3-margin-left fa fa-arrow-right"></i></a>
-  <hr>
-  <p><?php echo $row['msg']?>.</p>
-  <p>Best Regards, <br><?php echo $row['send_by_user']?></p>
-</div>
-
-     
+    
 </div>
 
  <script>
-var openInbox = document.getElementById("myBtn");
+ var openInbox = document.getElementById("myBtn");
 openInbox.click();
 var openInbox2 = document.getElementById("myBtn2");
 openInbox2.click();
@@ -132,7 +129,7 @@ function myFunc(id) {
     x.previousElementSibling.className.replace(" w3-red", "");
   }
 }
-openMail();
+/* openMail();
 function openMail(personName) {
   var i;
   var x = document.getElementsByClassName("person");
@@ -145,12 +142,12 @@ function openMail(personName) {
   }
   document.getElementById(personName).style.display = "block";
   event.currentTarget.className += " w3-light-grey";
-}
+} */
 </script>
 
 <script>
-var openTab = document.getElementById("firstTab");
-openTab.click();
+//var openTab = document.getElementById("firstTab");
+//openTab.click();
 </script> 
 
 </body>
