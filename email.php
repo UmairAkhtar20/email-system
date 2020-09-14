@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link href='https://fonts.googleapis.com/css?family=RobotoDraft' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="handlebars.js" type="text/javascript"></script>
 <script src="script.js"></script>
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "RobotoDraft", "Roboto", sans-serif}
@@ -40,6 +41,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "RobotoDraft", "Roboto", sans-serif}
               var subject=$(this).find(".subject").attr("subject");
               var sendon=$(this).find(".subject").attr("senton");
               var msg=$(this).find(".msg").attr("msg");
+              
               inboxshow(sendby,subject,sendon,msg);
             }); 
         });
@@ -99,6 +101,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "RobotoDraft", "Roboto", sans-serif}
 <div class="w3-main" style="margin-left:320px;">
 <i class="fa fa-bars w3-button w3-white w3-hide-large w3-xlarge w3-margin-left w3-margin-top" onclick="w3_open()"></i>
 <a href="javascript:void(0)" class="w3-hide-large w3-red w3-button w3-right w3-margin-top w3-margin-right" onclick="document.getElementById('id01').style.display='block'"><i class="fa fa-pencil"></i></a>
+
     
 </div>
 
@@ -129,26 +132,50 @@ function myFunc(id) {
     x.previousElementSibling.className.replace(" w3-red", "");
   }
 }
-/* openMail();
-function openMail(personName) {
-  var i;
-  var x = document.getElementsByClassName("person");
-  for (i = 0; i < x.length; i++) {
-    x[i].style.display = "none";
-  }
-  x = document.getElementsByClassName("test");
-  for (i = 0; i < x.length; i++) {
-    x[i].className = x[i].className.replace(" w3-light-grey", "");
-  }
-  document.getElementById(personName).style.display = "block";
-  event.currentTarget.className += " w3-light-grey";
-} */
 </script>
 
-<script>
-//var openTab = document.getElementById("firstTab");
-//openTab.click();
-</script> 
+<script id="inboxshow" type="text/x-handlebars-template">
+<div class="w3-container person'">
+<br>
+<img class='w3-round  w3-animate-top' src='avatar.png' style='width:20%;'>
+<h5 class='w3-opacity'>Subject:{{subject}}</h5>
+<h4><i class='fa fa-clock-o'></i> From "{{sendby}}" ,ON {{sendon}}</h4>
+<a class='w3-button w3-light-grey' href='#'>Reply<i class='w3-margin-left fa fa-mail-reply'></i></a>
+<a class='w3-button w3-light-grey' href='#'>Forward<i class='w3-margin-left fa fa-arrow-right'></i></a>
+<hr>
+<p>"{{msg}}"</p>
+<p>Best Regards, <br>"{{sendby}}"</p>
+
+</div>
+   
+</script>
+<script id="option" type="text/x-handlebars-template" >
+{{#each DataList}}
+<option>{{username}}</option>
+{{/each}}
+</script>
+<script id="sentmsg" type="text/x-handlebars-template">
+{{#each DataList}}
+<div class='w3-container'>
+<img class='w3-round w3-margin-right' src='avatar.png' style='width:15%;'><span class='w3-opacity w3-large'>SENT to:{{sent_to}}</span>
+<br><span>SENT ON :{{sent_on}}</span>
+<h6>Subject: {{subject}}</h6>
+<p> MSG:{{msg}}</p>" 
+</div>
+{{/each}}
+</script>
+<script id="inboxmsg" type="text/x-handlebars-template">
+{{#each DataList}}
+  <a href='javascript:void(0)' class='w3-bar-item w3-button w3-border-bottom test w3-hover-light-grey one  'w3_close();' id='firstTab'>
+    <div class='w3-container '>
+    <img class='w3-round w3-margin-right' src='avatar.png' style='width:15%;''><span class='w3-opacity w3-large spanname' sendby='{{send_by_user}}'>{{send_by_user}}</span>
+    <h6  class='subject'subject='{{subject}}' senton='{{sent_on}}'>Subject:{{subject}}</h6>
+    <p class='msg' msg='{{msg}}'> </p>
+    </div>    
+  </a>
+  {{/each}}
+</script>
+
 
 </body>
 </html> 
